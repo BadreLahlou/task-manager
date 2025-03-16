@@ -22,7 +22,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "tasks")
-@Data // Generates getters, setters, toString, equals, hashCode
+@Data 
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,7 +63,7 @@ public class Task {
     )
     private List<Task> dependencies;
 
-    // Additional Fields for Auditing and Scheduling (already present)
+    
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
@@ -71,14 +71,14 @@ public class Task {
     private LocalDateTime updatedAt;
 
     @Column
-    private String createdBy; // Reference to User who created the task
+    private String createdBy; 
 
-    // New Fields to Resolve Errors
+   
     @Column
-    private String recurrenceRule; // For Quartz scheduling (e.g., cron expression)
+    private String recurrenceRule; 
 
     @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> subtasks; // Hierarchical task structure
+    private List<Task> subtasks; 
 
     @ManyToMany
     @JoinTable(
@@ -86,13 +86,13 @@ public class Task {
         joinColumns = @JoinColumn(name = "task_id"),
         inverseJoinColumns = @JoinColumn(name = "resource_id")
     )
-    private List<Resource> resources; // Resources associated with the task
+    private List<Resource> resources; 
 
     @ManyToOne
     @JoinColumn(name = "parent_task_id")
-    private Task parentTask; // Bidirectional relationship for subtasks
+    private Task parentTask; 
 
-    // Method to calculate time spent (already present)
+   
     public void calculateTimeSpent() {
         if (startTime != null && endTime != null) {
             Duration duration = Duration.between(startTime, endTime);
