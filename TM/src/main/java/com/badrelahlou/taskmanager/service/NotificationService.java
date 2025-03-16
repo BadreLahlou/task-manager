@@ -28,7 +28,7 @@ public class NotificationService {
         notification.setRead(false);
         notificationRepository.save(notification);
 
-        // Send to RabbitMQ
+        
         rabbitTemplate.convertAndSend(NOTIFICATION_QUEUE, notification);
     }
 
