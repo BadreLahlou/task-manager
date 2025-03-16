@@ -18,7 +18,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "users")
-@Data // Lombok annotation to generate getters, setters, toString, etc.
+@Data 
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,15 +43,15 @@ public class User {
     @ElementCollection
     private List<String> permissions;
 
-    // 2FA Fields
+    
     @Column
-    private String totpSecret; // Stores the TOTP secret for 2FA
+    private String totpSecret; 
 
     @Column
-    private boolean isTwoFactorEnabled; // Flag to enable/disable 2FA for the user
+    private boolean isTwoFactorEnabled; 
     
-    @Transient // This field is not stored in the database
-    private String password; // Raw password for authentication and registration
+    @Transient 
+    private String password; 
     
     public String getPassword() {
         return password;
