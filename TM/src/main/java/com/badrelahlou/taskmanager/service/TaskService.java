@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.badrelahlou.taskmanager.model.Resource; // Add this import
+import com.badrelahlou.taskmanager.model.Resource; 
 import com.badrelahlou.taskmanager.model.Task;
 import com.badrelahlou.taskmanager.model.TaskStatus;
 import com.badrelahlou.taskmanager.model.User;
@@ -28,7 +28,7 @@ public class TaskService {
     private NotificationService notificationService;
 
     @Autowired
-    private ResourceRepository resourceRepository; // Add this field
+    private ResourceRepository resourceRepository; 
 
     public Task createTask(Task task, List<Long> dependencyIds) {
         if (dependencyIds != null && !dependencyIds.isEmpty()) {
@@ -63,7 +63,7 @@ public class TaskService {
         task.calculateTimeSpent();
         task.setStatus(TaskStatus.DONE);
 
-        // Notify dependent tasks
+        
         taskRepository.findAll().stream()
         .filter(t -> t.getDependencies().contains(task) && t.getStatus() != TaskStatus.DONE)
                 .forEach(t -> notificationService.createNotification(t.getAssignedUser(),
@@ -92,7 +92,7 @@ public class TaskService {
         task.setRecurrenceRule(updatedTask.getRecurrenceRule());
         task.setResources(updatedTask.getResources());
     
-        // ✅ Send notification when task status changes
+      
         if (!task.getStatus().equals(updatedTask.getStatus())) {
             notificationService.createNotification(task.getAssignedUser(), 
                 "Your task '" + task.getTitle() + "' status changed to " + updatedTask.getStatus());
