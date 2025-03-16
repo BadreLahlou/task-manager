@@ -32,7 +32,7 @@ public class UserController {
     private NotificationService notificationService;
    
     @Autowired
-    private JwtUtils jwtUtils; // ✅ Inject JwtUtils instance
+    private JwtUtils jwtUtils; 
     
     @PostMapping("/register")
     public ResponseEntity<?> createUser(@RequestBody UserRegistrationDTO userDTO) {
@@ -74,7 +74,7 @@ public class UserController {
         try {
             User user = userService.authenticate(loginRequest.getUsername(), loginRequest.getPassword());
 
-            // ✅ Corrected non-static method call
+            
             String jwtToken = jwtUtils.generateToken(user.getUsername());
 
             return ResponseEntity.ok(new JwtResponse(jwtToken, user.getId(), user.getUsername(), user.getRole()));
