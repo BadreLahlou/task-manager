@@ -23,8 +23,8 @@ public class UserService {
         userRepository.findByEmail(user.getEmail())
                 .ifPresent(u -> { throw new RuntimeException("Email already exists"); });
     
-        // Ensure the password is hashed before saving
-        String plainPassword = user.getPasswordHash();  // Assuming getter exists
+       
+        String plainPassword = user.getPasswordHash();  
         String hashedPassword = passwordEncoder.encode(plainPassword);
         
         user.setPasswordHash(hashedPassword);
@@ -81,7 +81,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    // 2FA Methods
+   
     public void enableTwoFactor(Long userId, String totpSecret) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
