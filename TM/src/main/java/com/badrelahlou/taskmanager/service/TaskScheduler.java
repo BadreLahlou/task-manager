@@ -17,12 +17,12 @@ public class TaskScheduler {
     @Autowired
     private NotificationService notificationService;
 
-    @Scheduled(fixedRate = 86400000) // Daily
+    @Scheduled(fixedRate = 86400000) 
     public void createRecurringTasks() {
         taskRepository.findAll().stream()
                 .filter(task -> task.getRecurrenceRule() != null && !task.getRecurrenceRule().isEmpty())
                 .forEach(task -> {
-                    // Simplified recurrence logic (expand with iCal parsing if needed)
+                    
                     Task newTask = new Task();
                     newTask.setTitle(task.getTitle());
                     newTask.setDescription(task.getDescription());
@@ -32,7 +32,7 @@ public class TaskScheduler {
                 });
     }
 
-    @Scheduled(fixedRate = 3600000) // Hourly
+    @Scheduled(fixedRate = 3600000) 
     public void sendReminders() {
         taskRepository.findAll().stream()
         .filter(task -> task.getStatus() == TaskStatus.TODO && task.getAssignedUser() != null)
