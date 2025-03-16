@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain; // Import this
+import org.springframework.security.web.SecurityFilterChain; 
 
 @Configuration
 @EnableWebSecurity
@@ -27,9 +27,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/reports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROJECT_MANAGER", "ROLE_TEAM_LEADER", "ROLE_EXTERNAL_VIEWER")
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Fix import issue
-            .formLogin(form -> form.disable()) // Prevent login redirection loops
-            .httpBasic(Customizer.withDefaults()); // Fix missing method error
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
+            .formLogin(form -> form.disable()) 
+            .httpBasic(Customizer.withDefaults()); 
 
         return http.build();
     }
