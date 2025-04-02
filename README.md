@@ -4,7 +4,7 @@
 
 Welcome to **Chronos**, a powerful full-stack task management system designed to take control of your time, streamline task delegation, and boost productivity for individuals and teams across all industries! Crafted with passion by **Badre Lahlou**, Chronos combines cutting-edge technology with an intuitive design to deliver seamless task tracking, role-based access, and insightful analytics. Whether you’re a corporate team juggling complex projects, a school managing student assignments, a freelancer tracking billable hours, or a healthcare team prioritizing patient care, Chronos has you covered.
 
-🌟 **Why Chronos?** Named after the Greek god of time, Chronos empowers you to harness every second. Say goodbye to missed deadlines and chaotic workflows—Chronos brings order to your tasks with smart features like task dependencies, automated notifications, and customizable dashboards. It’s your ultimate companion for working smarter, not harder, no matter your field!
+🌟 **Why Chronos?** Inspired by the Greek word "chronos, Chronos empowers you to harness every second. Say goodbye to missed deadlines and chaotic workflows—Chronos brings order to your tasks with smart features like task dependencies, automated notifications, and customizable dashboards. It’s your ultimate companion for working smarter, not harder, no matter your field!
 
 **Note**: This repository contains the full source code for Chronos, shared to showcase my skills to potential employers. While the code is publicly visible, Chronos is a proprietary project, and I kindly ask that it not be replicated or used without permission. I’m excited to deploy it as a live app soon—stay tuned!
 
@@ -130,13 +130,17 @@ The frontend of Chronos is a modern React application built with TypeScript and 
 ### Frontend Interface
 Here’s a glimpse of the Chronos frontend, where users can manage tasks, track time, and collaborate with their team. The UI is built with React and Tailwind CSS for a modern, responsive experience across devices.
 
-screenshots/frontend-time-tracking.png
+
+![Chronos Frontend Screenshot](screenshots/frontend-time-tracking.png)
 
 
-screenshots/frontend-time-tracking2.png
+![Chronos Frontend Screenshot](screenshots/frontend-time-tracking3.png)
 
 
-screenshots/frontend-time-tracking3.png
+![Chronos Frontend Screenshot](screenshots/frontend-time-tracking2.png)
+
+
+
 ---
 
 ## 🤝 Deployment Plans
