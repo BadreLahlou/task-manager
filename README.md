@@ -130,8 +130,13 @@ The frontend of Chronos is a modern React application built with TypeScript and 
 ### Frontend Interface
 Here’s a glimpse of the Chronos frontend, where users can manage tasks, track time, and collaborate with their team. The UI is built with React and Tailwind CSS for a modern, responsive experience across devices.
 
-![Chronos Frontend Screenshot](screenshots/frontend-screenshot.png)  
+screenshots/frontend-time-tracking.png
 
+
+screenshots/frontend-time-tracking2.png
+
+
+screenshots/frontend-time-tracking3.png
 ---
 
 ## 🤝 Deployment Plans
