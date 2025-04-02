@@ -1,0 +1,215 @@
+
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Clock, BarChart4, Calendar, Filter } from 'lucide-react';
+import { TaskProps } from '@/types/task';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { TimerButton } from '@/components/TimerButton';
+import { toast } from 'sonner';
+
+const TimeTracking = () => {
+  const [tasks, setTasks] = useState<TaskProps[]>([]);
+  const [timeFilter, setTimeFilter] = useState('all');
+  const [activeTask, setActiveTask] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      try {
+        setTasks(JSON.parse(savedTasks));
+      } catch (e) {
+        console.error('Failed to parse saved tasks:', e);
+      }
+    }
+  }, []);
+
+  // Save tasks to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
+  
+  const formatTime = (seconds?: number) => {
+    if (!seconds) return '0h 0m';
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    
+    return `${hours}h ${minutes}m`;
+  };
+  
+  const totalTimeLogged = tasks.reduce((total, task) => total + (task.timeLogged || 0), 0);
+  
+  const inProgressTasks = tasks.filter(task => task.status === 'in-progress');
+  const completedTasks = tasks.filter(task => task.status === 'completed');
+  
+  const getFilteredTasks = () => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    const weekStart = new Date(today - (now.getDay() * 24 * 60 * 60 * 1000)).getTime();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+    
+    let filteredTasks = tasks.filter(task => (task.timeLogged || 0) > 0);
+    
+    // Filter by time period
+    if (timeFilter === 'today') {
+      // In a real app, we would filter by actual timestamps
+      // For this demo, just return the tasks with time logged
+      return filteredTasks;
+    } else if (timeFilter === 'week') {
+      return filteredTasks;
+    } else if (timeFilter === 'month') {
+      return filteredTasks;
+    }
+    
+    return filteredTasks;
+  };
+  
+  const filteredTasks = getFilteredTasks();
+
+  const handleTimeUpdate = (taskId: string, newTime: number) => {
+    setTasks(prev => 
+      prev.map(task => 
+        task.id === taskId ? { ...task, timeLogged: newTime } : task
+      )
+    );
+  };
+
+  const handleStartTimer = (taskId: string) => {
+    // If there's another active task, pause it first
+    if (activeTask && activeTask !== taskId) {
+      setTasks(prev => 
+        prev.map(task => 
+          task.id === activeTask ? { ...task, status: 'todo' } : task
+        )
+      );
+      toast.info("Previous timer paused");
+    }
+    
+    setActiveTask(taskId);
+    setTasks(prev => 
+      prev.map(task => 
+        task.id === taskId ? { ...task, status: 'in-progress' } : task
+      )
+    );
+    toast.success("Timer started");
+  };
+
+  const handlePauseTimer = (taskId: string) => {
+    setActiveTask(null);
+    setTasks(prev => 
+      prev.map(task => 
+        task.id === taskId ? { ...task, status: 'todo' } : task
+      )
+    );
+    toast.info("Timer paused");
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Time Tracking</h1>
+          <p className="text-muted-foreground">Monitor time spent on tasks</p>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Select 
+            value={timeFilter} 
+            onValueChange={setTimeFilter}
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Filter by time" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Time</SelectItem>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="week">This Week</SelectItem>
+              <SelectItem value="month">This Month</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button variant="outline" size="sm" className="gap-2">
+            <Calendar className="h-3.5 w-3.5" />
+            Date Range
+          </Button>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatTime(totalTimeLogged)}</div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Active Tasks</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{inProgressTasks.length}</div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{completedTasks.length}</div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      <div className="bg-white rounded-lg border shadow-sm">
+        <div className="p-4 border-b">
+          <h2 className="font-semibold">Time Logs</h2>
+        </div>
+        {filteredTasks.length > 0 ? (
+          <div className="divide-y">
+            {filteredTasks.map(task => (
+              <div key={task.id} className="p-4 flex justify-between items-center">
+                <div>
+                  <div className="font-medium">{task.title}</div>
+                  <div className="text-sm text-muted-foreground">
+                    Status: {task.status === 'todo' ? 'To Do' : 
+                             task.status === 'in-progress' ? 'In Progress' : 'Completed'}
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center">
+                    <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <span className="font-medium">{formatTime(task.timeLogged)}</span>
+                  </div>
+                  
+                  {task.status !== 'completed' && (
+                    <TimerButton
+                      isRunning={task.status === 'in-progress'}
+                      timeLogged={task.timeLogged || 0}
+                      onTimeUpdate={(newTime) => handleTimeUpdate(task.id, newTime)}
+                      onStart={() => handleStartTimer(task.id)}
+                      onPause={() => handlePauseTimer(task.id)}
+                      className="h-8 text-xs"
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 text-center">
+            <Clock className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
+            <h3 className="text-lg font-medium">No time tracked yet</h3>
+            <p className="text-muted-foreground mt-1">Start a task timer to begin tracking time</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default TimeTracking;
