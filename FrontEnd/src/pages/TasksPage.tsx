@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TaskProps, TaskStatus } from '@/types/task';
@@ -71,7 +72,7 @@ const TasksPage = () => {
   const hasFilters = !!priorityFilter || !!searchQuery;
 
   return (
-    <div className="max-w-7xl mx-auto animate-fade-in">
+    <div className="max-w-7xl mx-auto animate-fade-in dashboard-content">
       {/* Header with title and main action buttons */}
       <TaskHeader 
         priorityFilter={priorityFilter}
@@ -87,41 +88,41 @@ const TasksPage = () => {
       />
       
       {/* Tabs for filtering by status */}
-      <div className="mb-6">
+      <div className="mb-5">
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="grid grid-cols-4 w-full max-w-md bg-purple-50 p-1">
+          <TabsList className="grid grid-cols-4 w-full max-w-md bg-purple-50 dark:bg-card/60 p-1 rounded-xl">
             <TabsTrigger 
               value="all" 
               onClick={() => setActiveFilter('all')}
-              className="data-[state=active]:bg-white data-[state=active]:text-purple-700 transition-all duration-300"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-card data-[state=active]:text-purple-700 dark:data-[state=active]:text-purple-300 transition-all duration-300 rounded-lg"
             >
               All
             </TabsTrigger>
             <TabsTrigger 
               value="todo" 
               onClick={() => setActiveFilter('todo')}
-              className="data-[state=active]:bg-white data-[state=active]:text-purple-700 transition-all duration-300"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-card data-[state=active]:text-purple-700 dark:data-[state=active]:text-purple-300 transition-all duration-300 rounded-lg"
             >
               To Do
             </TabsTrigger>
             <TabsTrigger 
               value="in-progress" 
               onClick={() => setActiveFilter('in-progress')}
-              className="data-[state=active]:bg-white data-[state=active]:text-purple-700 transition-all duration-300"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-card data-[state=active]:text-purple-700 dark:data-[state=active]:text-purple-300 transition-all duration-300 rounded-lg"
             >
               In Progress
             </TabsTrigger>
             <TabsTrigger 
               value="completed" 
               onClick={() => setActiveFilter('completed')}
-              className="data-[state=active]:bg-white data-[state=active]:text-purple-700 transition-all duration-300"
+              className="data-[state=active]:bg-white dark:data-[state=active]:bg-card data-[state=active]:text-purple-700 dark:data-[state=active]:text-purple-300 transition-all duration-300 rounded-lg"
             >
               Completed
             </TabsTrigger>
           </TabsList>
           
           {/* Tab content */}
-          <TabsContent value="all" className="mt-6">
+          <TabsContent value="all" className="mt-5">
             <TaskList 
               tasks={filteredTasks}
               hasFilters={hasFilters}
@@ -133,7 +134,7 @@ const TasksPage = () => {
             />
           </TabsContent>
           
-          <TabsContent value="todo" className="mt-6">
+          <TabsContent value="todo" className="mt-5">
             <TaskList 
               tasks={filteredTasks}
               hasFilters={hasFilters}
@@ -145,7 +146,7 @@ const TasksPage = () => {
             />
           </TabsContent>
           
-          <TabsContent value="in-progress" className="mt-6">
+          <TabsContent value="in-progress" className="mt-5">
             <TaskList 
               tasks={filteredTasks}
               hasFilters={hasFilters}
@@ -157,7 +158,7 @@ const TasksPage = () => {
             />
           </TabsContent>
           
-          <TabsContent value="completed" className="mt-6">
+          <TabsContent value="completed" className="mt-5">
             <TaskList 
               tasks={filteredTasks}
               hasFilters={hasFilters}

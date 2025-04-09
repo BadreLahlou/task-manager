@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +23,6 @@ const TimeTracking = () => {
     }
   }, []);
 
-  // Save tasks to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }, [tasks]);
@@ -51,10 +49,7 @@ const TimeTracking = () => {
     
     let filteredTasks = tasks.filter(task => (task.timeLogged || 0) > 0);
     
-    // Filter by time period
     if (timeFilter === 'today') {
-      // In a real app, we would filter by actual timestamps
-      // For this demo, just return the tasks with time logged
       return filteredTasks;
     } else if (timeFilter === 'week') {
       return filteredTasks;
@@ -76,7 +71,6 @@ const TimeTracking = () => {
   };
 
   const handleStartTimer = (taskId: string) => {
-    // If there's another active task, pause it first
     if (activeTask && activeTask !== taskId) {
       setTasks(prev => 
         prev.map(task => 
@@ -106,8 +100,8 @@ const TimeTracking = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <div className="max-w-7xl mx-auto animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Time Tracking</h1>
           <p className="text-muted-foreground">Monitor time spent on tasks</p>
@@ -118,10 +112,10 @@ const TimeTracking = () => {
             value={timeFilter} 
             onValueChange={setTimeFilter}
           >
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[160px] rounded-xl">
               <SelectValue placeholder="Filter by time" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="rounded-xl">
               <SelectItem value="all">All Time</SelectItem>
               <SelectItem value="today">Today</SelectItem>
               <SelectItem value="week">This Week</SelectItem>
@@ -129,50 +123,50 @@ const TimeTracking = () => {
             </SelectContent>
           </Select>
           
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2 rounded-xl">
             <Calendar className="h-3.5 w-3.5" />
             Date Range
           </Button>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <Card>
-          <CardHeader className="pb-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <Card className="rounded-xl p-1 shadow-md">
+          <CardHeader className="pb-2 px-5 pt-5">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Time</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-5">
             <div className="text-2xl font-bold">{formatTime(totalTimeLogged)}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="pb-2">
+        <Card className="rounded-xl p-1 shadow-md">
+          <CardHeader className="pb-2 px-5 pt-5">
             <CardTitle className="text-sm font-medium text-muted-foreground">Active Tasks</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-5">
             <div className="text-2xl font-bold">{inProgressTasks.length}</div>
           </CardContent>
         </Card>
         
-        <Card>
-          <CardHeader className="pb-2">
+        <Card className="rounded-xl p-1 shadow-md">
+          <CardHeader className="pb-2 px-5 pt-5">
             <CardTitle className="text-sm font-medium text-muted-foreground">Completed</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-5">
             <div className="text-2xl font-bold">{completedTasks.length}</div>
           </CardContent>
         </Card>
       </div>
       
-      <div className="bg-white rounded-lg border shadow-sm">
-        <div className="p-4 border-b">
+      <div className="bg-card rounded-xl border shadow-md dark:bg-card dark:border-border overflow-hidden">
+        <div className="p-5 border-b">
           <h2 className="font-semibold">Time Logs</h2>
         </div>
         {filteredTasks.length > 0 ? (
-          <div className="divide-y">
+          <div className="divide-y dark:divide-border">
             {filteredTasks.map(task => (
-              <div key={task.id} className="p-4 flex justify-between items-center">
+              <div key={task.id} className="p-5 flex justify-between items-center">
                 <div>
                   <div className="font-medium">{task.title}</div>
                   <div className="text-sm text-muted-foreground">
@@ -193,7 +187,7 @@ const TimeTracking = () => {
                       onTimeUpdate={(newTime) => handleTimeUpdate(task.id, newTime)}
                       onStart={() => handleStartTimer(task.id)}
                       onPause={() => handlePauseTimer(task.id)}
-                      className="h-8 text-xs"
+                      className="h-8 text-xs rounded-xl"
                     />
                   )}
                 </div>
@@ -201,7 +195,7 @@ const TimeTracking = () => {
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center">
+          <div className="p-8 text-center rounded-b-xl">
             <Clock className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
             <h3 className="text-lg font-medium">No time tracked yet</h3>
             <p className="text-muted-foreground mt-1">Start a task timer to begin tracking time</p>

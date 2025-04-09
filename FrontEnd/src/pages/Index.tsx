@@ -9,25 +9,25 @@ import { useState } from "react";
 
 const solutions = [
   {
-    icon: <Briefcase className="h-8 w-8 text-blue-600" />,
+    icon: <Briefcase className="h-8 w-8 text-blue-600 dark:text-blue-400" />,
     title: "Business Teams",
     description: "For companies of all sizes. Coordinate teams, manage projects, and track resources efficiently.",
     cta: "For Businesses"
   },
   {
-    icon: <GraduationCap className="h-8 w-8 text-purple-600" />,
+    icon: <GraduationCap className="h-8 w-8 text-purple-600 dark:text-purple-400" />,
     title: "Educational Institutions",
     description: "For schools and universities. Manage course assignments, track student progress, and schedule academic tasks.",
     cta: "For Education"
   },
   {
-    icon: <UserRound className="h-8 w-8 text-green-600" />,
+    icon: <UserRound className="h-8 w-8 text-green-600 dark:text-green-400" />,
     title: "Individuals & Freelancers",
     description: "For personal productivity. Track billable hours, manage personal projects, and stay on top of deadlines.",
     cta: "For Individuals"
   },
   {
-    icon: <HeartPulse className="h-8 w-8 text-red-600" />,
+    icon: <HeartPulse className="h-8 w-8 text-red-600 dark:text-red-400" />,
     title: "Healthcare Organizations",
     description: "For hospitals and clinics. Manage patient care tasks, clinical workflows, and resource allocation.",
     cta: "For Healthcare"
@@ -58,7 +58,7 @@ const Index = () => {
         <Features />
       </section>
       
-      <section id="about" className="py-20 bg-white">
+      <section id="about" className="py-20 bg-white dark:bg-background">
         <div className="container px-4 md:px-6">
           <div className="max-w-5xl mx-auto space-y-8">
             <div className="text-center space-y-4 mb-8">
@@ -70,7 +70,7 @@ const Index = () => {
               </p>
             </div>
             
-            <div className="bg-secondary/20 rounded-xl p-6 md:p-10 border border-border">
+            <div className="bg-secondary/20 dark:bg-secondary/10 rounded-xl p-6 md:p-10 border border-border">
               <div className={`space-y-6 ${isAboutExpanded ? '' : 'max-h-[400px] overflow-hidden relative'}`}>
                 <p className="text-lg">
                   In today's fast-paced world, effective time management isn't just a skill—it's a necessity. Chronos was built from the ground up with a single mission: to transform how individuals and teams interact with their most precious resource—time.
@@ -102,7 +102,7 @@ const Index = () => {
                 </p>
                 
                 {!isAboutExpanded && (
-                  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-secondary/20 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-secondary/20 to-transparent dark:from-background/90"></div>
                 )}
               </div>
               
@@ -123,7 +123,7 @@ const Index = () => {
       </section>
       
       <section id="solutions" className="py-20">
-        <div className="container px-4 md:px-6">
+        <div className="container px-4 md:px-6 pb-6">
           <div className="max-w-5xl mx-auto text-center space-y-4 mb-16">
             <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
               Tailored solutions for every team
@@ -137,7 +137,7 @@ const Index = () => {
             {solutions.map((solution, index) => (
               <div 
                 key={index} 
-                className="bg-white border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group"
+                className="bg-white dark:bg-card border border-border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group solution-card"
               >
                 <div className="p-6 md:p-8">
                   <div className="mb-6">{solution.icon}</div>
@@ -156,135 +156,9 @@ const Index = () => {
         </div>
       </section>
       
-      <section id="pricing" className="py-20 bg-secondary/50">
+      <section className="py-16 dark:bg-dashboard-dark bg-primary text-primary-foreground rounded-3xl mx-4 my-4">
         <div className="container px-4 md:px-6">
-          <div className="max-w-5xl mx-auto text-center space-y-4 mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight">
-              Simple, transparent pricing
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Choose the plan that's right for your team
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">Basic</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-semibold">$0</span>
-                  <span className="text-muted-foreground"> / month</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-6">Perfect for individuals and small projects.</p>
-                <ul className="space-y-2 mb-8">
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Up to 10 tasks
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Basic time tracking
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    1 user only
-                  </li>
-                </ul>
-                <Button variant="outline" className="w-full">Get Started</Button>
-              </div>
-            </div>
-            
-            <div className="bg-white border-2 border-primary rounded-xl overflow-hidden shadow-md relative">
-              <div className="absolute top-0 inset-x-0 bg-primary text-white text-xs font-medium py-1 text-center">
-                Most Popular
-              </div>
-              <div className="p-6 pt-8">
-                <h3 className="text-lg font-semibold mb-2">Professional</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-semibold">$12</span>
-                  <span className="text-muted-foreground"> / month</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-6">Perfect for freelancers and small teams.</p>
-                <ul className="space-y-2 mb-8">
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Unlimited tasks
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Advanced time tracking
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Up to 5 users
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Basic reporting
-                  </li>
-                </ul>
-                <Button className="w-full">Try for Free</Button>
-              </div>
-            </div>
-            
-            <div className="bg-white border border-border rounded-xl overflow-hidden shadow-sm">
-              <div className="p-6">
-                <h3 className="text-lg font-semibold mb-2">Enterprise</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-semibold">$49</span>
-                  <span className="text-muted-foreground"> / month</span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-6">Perfect for large teams and organizations.</p>
-                <ul className="space-y-2 mb-8">
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Unlimited everything
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Advanced analytics
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Unlimited users
-                  </li>
-                  <li className="flex items-center text-sm">
-                    <svg className="h-4 w-4 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Dedicated support
-                  </li>
-                </ul>
-                <Button variant="outline" className="w-full">Contact Sales</Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      
-      <section className="py-16 bg-primary text-primary-foreground">
-        <div className="container px-4 md:px-6">
-          <div className="max-w-3xl mx-auto text-center space-y-6">
+          <div className="max-w-3xl mx-auto text-center space-y-6 rounded-3xl p-6">
             <h2 className="text-3xl font-semibold tracking-tight">
               Ready to start tracking time more effectively?
             </h2>
@@ -293,11 +167,18 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
               <Link to="/dashboard">
-                <Button size="lg" variant="secondary" className="gap-2 min-w-[180px]">
+                <Button 
+                  size="lg" 
+                  className="gap-2 min-w-[180px] bg-white text-primary hover:bg-white/90 rounded-xl"
+                >
                   Get Started <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="border-primary-foreground/20 hover:bg-primary-foreground/10 min-w-[180px]">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="min-w-[180px] border-white/20 text-white hover:bg-white/10 rounded-xl"
+              >
                 Watch Demo
               </Button>
             </div>
@@ -305,14 +186,13 @@ const Index = () => {
         </div>
       </section>
       
-      <footer className="py-12 bg-secondary/40">
+      <footer className="py-12 bg-secondary/40 dark:bg-card/20">
         <div className="container px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <h3 className="font-medium mb-4">Product</h3>
               <ul className="space-y-2">
                 <li><button onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Features</button></li>
-                <li><button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm text-muted-foreground hover:text-foreground transition-colors">Pricing</button></li>
                 <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Integrations</a></li>
                 <li><a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Changelog</a></li>
               </ul>

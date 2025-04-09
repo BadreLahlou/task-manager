@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
@@ -14,15 +15,15 @@ export interface TaskCardProps {
 }
 
 const priorityClasses = {
-  low: 'bg-blue-50 text-blue-600 border-blue-100',
-  medium: 'bg-yellow-50 text-yellow-600 border-yellow-100',
-  high: 'bg-red-50 text-red-600 border-red-100'
+  low: 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/50',
+  medium: 'bg-yellow-50 text-yellow-600 border-yellow-100 dark:bg-yellow-950/30 dark:text-yellow-400 dark:border-yellow-900/50',
+  high: 'bg-red-50 text-red-600 border-red-100 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900/50'
 };
 
 const statusClasses = {
-  'todo': 'bg-slate-50 text-slate-600 border-slate-100',
-  'in-progress': 'bg-purple-50 text-purple-600 border-purple-100',
-  'completed': 'bg-green-50 text-green-600 border-green-100'
+  'todo': 'bg-slate-50 text-slate-600 border-slate-100 dark:bg-slate-950/30 dark:text-slate-400 dark:border-slate-900/50',
+  'in-progress': 'bg-purple-50 text-purple-600 border-purple-100 dark:bg-purple-950/30 dark:text-purple-400 dark:border-purple-900/50',
+  'completed': 'bg-green-50 text-green-600 border-green-100 dark:bg-green-950/30 dark:text-green-400 dark:border-green-900/50'
 };
 
 export const TaskCard = ({ 
@@ -72,7 +73,7 @@ export const TaskCard = ({
 
   return (
     <Card 
-      className={`overflow-hidden transition-all ${
+      className={`overflow-hidden transition-all dark:bg-card dark:text-card-foreground dark:border-border ${
         task.status === 'completed' ? 'opacity-75' : ''
       } ${
         isHovered ? 'shadow-md border-primary/20' : 'shadow-sm'

@@ -30,10 +30,10 @@ export const EmptyTaskState: FC<EmptyTaskStateProps> = ({ statusFilter, hasFilte
   }
 
   return (
-    <div className="text-center py-12 bg-purple-50/50 rounded-lg border border-purple-100">
+    <div className="text-center py-12 bg-purple-50/50 dark:bg-card/30 rounded-lg border border-purple-100 dark:border-purple-900/20">
       {icon}
-      <h3 className="text-lg font-medium text-purple-900">{title}</h3>
-      <p className="mt-2 text-sm text-purple-600">{message}</p>
+      <h3 className="text-lg font-medium text-purple-900 dark:text-purple-300">{title}</h3>
+      <p className="mt-2 text-sm text-purple-600 dark:text-purple-400">{message}</p>
       {statusFilter === 'all' && !hasFilters && (
         <div className="mt-6">
           <Button 

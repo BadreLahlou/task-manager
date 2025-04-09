@@ -1,12 +1,16 @@
 
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { TaskProps } from '@/types/task';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface PriorityChartProps {
   tasks: TaskProps[];
 }
 
 const PriorityChart = ({ tasks }: PriorityChartProps) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
   // Vibrant colors for priority chart
   const priorityData = [
     { name: 'Low', value: tasks.filter(t => t.priority === 'low').length, color: '#93C5FD' },
@@ -32,7 +36,7 @@ const PriorityChart = ({ tasks }: PriorityChartProps) => {
       <text 
         x={x} 
         y={y} 
-        fill="#000" 
+        fill={isDark ? "#fff" : "#000"} 
         textAnchor={x > cx ? 'start' : 'end'} 
         dominantBaseline="central"
         fontSize={12}
@@ -47,7 +51,7 @@ const PriorityChart = ({ tasks }: PriorityChartProps) => {
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={filteredData.length > 0 ? filteredData : [{name: 'No Data', value: 1, color: '#E5E7EB'}]}
+            data={filteredData.length > 0 ? filteredData : [{name: 'No Data', value: 1, color: isDark ? '#333' : '#E5E7EB'}]}
             cx="50%"
             cy="50%"
             labelLine={false}
@@ -56,16 +60,21 @@ const PriorityChart = ({ tasks }: PriorityChartProps) => {
             fill="#8884d8"
             dataKey="value"
           >
-            {(filteredData.length > 0 ? filteredData : [{name: 'No Data', value: 1, color: '#E5E7EB'}]).map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} stroke="#fff" strokeWidth={2} />
+            {(filteredData.length > 0 ? filteredData : [{name: 'No Data', value: 1, color: isDark ? '#333' : '#E5E7EB'}]).map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={entry.color} stroke={isDark ? "#121827" : "#fff"} strokeWidth={2} />
             ))}
           </Pie>
-          <Tooltip formatter={(value) => [`${value} tasks`, 'Count']} />
+          <Tooltip 
+            formatter={(value) => [`${value} tasks`, 'Count']} 
+            contentStyle={{ backgroundColor: isDark ? '#1A1F2C' : '#fff', borderColor: isDark ? '#333' : '#ccc' }}
+            itemStyle={{ color: isDark ? '#fff' : '#000' }}
+            labelStyle={{ color: isDark ? '#ccc' : '#666' }}
+          />
           <Legend 
             verticalAlign="bottom" 
             height={36} 
             layout="horizontal"
-            formatter={(value) => <span className="text-xs">{value}</span>}
+            formatter={(value) => <span className={`text-xs ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>{value}</span>}
           />
         </PieChart>
       </ResponsiveContainer>

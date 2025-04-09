@@ -127,8 +127,8 @@ const Team = () => {
   };
   
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+    <div className="max-w-7xl mx-auto animate-fade-in">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Team</h1>
           <p className="text-muted-foreground">Manage your team and permissions</p>
@@ -151,7 +151,7 @@ const Team = () => {
         </div>
       </div>
       
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input 
@@ -166,7 +166,7 @@ const Team = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredMembers.map(member => (
-          <Card key={member.id} className="overflow-hidden">
+          <Card key={member.id} className="overflow-hidden rounded-xl">
             <CardHeader className="p-4 pb-0">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-3">
@@ -242,7 +242,7 @@ const Team = () => {
         ))}
         
         {/* Add Member Card */}
-        <Card className="border-dashed">
+        <Card className="border-dashed rounded-xl">
           <CardContent className="p-6 flex flex-col items-center justify-center h-full min-h-[200px]">
             <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <UserPlus className="h-6 w-6 text-primary" />

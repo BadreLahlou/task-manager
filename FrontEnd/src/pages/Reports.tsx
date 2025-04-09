@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { DownloadCloud, BarChart4, TrendingUp, Zap, FileText, FilePdf } from 'lucide-react';
+import { DownloadCloud, BarChart4, TrendingUp, Zap, FileText, File } from 'lucide-react';
 import { TaskProps } from '@/types/task';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import StatusChart from '@/components/reports/StatusChart';
@@ -35,17 +35,13 @@ const Reports = () => {
     }
   }, []);
 
-  // Function to get filtered tasks based on timeFrame
   const getFilteredTasks = () => {
     if (timeFrame === 'all') return tasks;
-    // For demo purposes, we're returning all tasks
-    // In a real app, we would filter by creation date or completion date
     return tasks;
   };
 
   const filteredTasks = getFilteredTasks();
 
-  // Calculate some analytics
   const totalTasks = filteredTasks.length;
   const completedTasks = filteredTasks.filter(task => task.status === 'completed').length;
   const completionRate = totalTasks > 0 ? (completedTasks / totalTasks * 100).toFixed(1) : '0';
@@ -62,7 +58,6 @@ const Reports = () => {
     ? (highPriorityCompleted / highPriorityTotal * 100).toFixed(1) 
     : '0';
 
-  // Determine which chart to show based on report type
   const renderChart = () => {
     if (reportType === 'overview' || reportType === 'status') {
       return <StatusChart tasks={filteredTasks} />;
@@ -73,7 +68,6 @@ const Reports = () => {
     }
   };
 
-  // Generate chart title based on report type
   const getChartTitle = () => {
     switch (reportType) {
       case 'overview': return 'Task Overview';
@@ -84,7 +78,6 @@ const Reports = () => {
     }
   };
 
-  // Get analysis insights
   const getInsights = () => {
     if (tasks.length === 0) return "Add tasks to see insights";
     
@@ -115,7 +108,6 @@ const Reports = () => {
 
   const handleExportPDF = () => {
     toast.success("Exporting report as PDF...");
-    // In a real app, this would trigger PDF generation and download
     setTimeout(() => {
       toast.info("PDF Export complete!");
     }, 1500);
@@ -123,7 +115,6 @@ const Reports = () => {
 
   const handleExportTXT = () => {
     toast.success("Exporting report as TXT file...");
-    // In a real app, this would generate a text file with the report data
     setTimeout(() => {
       toast.info("TXT Export complete!");
     }, 1500);
@@ -142,10 +133,10 @@ const Reports = () => {
             value={timeFrame} 
             onValueChange={setTimeFrame}
           >
-            <SelectTrigger className="w-[120px] border-purple-200 focus:ring-purple-400">
+            <SelectTrigger className="w-[120px] border-purple-200 focus:ring-purple-400 dark:border-border">
               <SelectValue placeholder="Time Period" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-card dark:border-border">
               <SelectItem value="all">All Time</SelectItem>
               <SelectItem value="today">Today</SelectItem>
               <SelectItem value="week">This Week</SelectItem>
@@ -157,10 +148,10 @@ const Reports = () => {
             value={reportType} 
             onValueChange={setReportType}
           >
-            <SelectTrigger className="w-[160px] border-purple-200 focus:ring-purple-400">
+            <SelectTrigger className="w-[160px] border-purple-200 focus:ring-purple-400 dark:border-border">
               <SelectValue placeholder="Report Type" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="dark:bg-card dark:border-border">
               <SelectItem value="overview">Overview</SelectItem>
               <SelectItem value="status">Status Report</SelectItem>
               <SelectItem value="time">Time Report</SelectItem>
@@ -170,14 +161,14 @@ const Reports = () => {
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2 border-purple-200 hover:bg-purple-50 hover:text-purple-600 transition-colors">
+              <Button variant="outline" size="sm" className="gap-2 border-purple-200 hover:bg-purple-50 hover:text-purple-600 transition-colors dark:border-border dark:hover:bg-card">
                 <DownloadCloud className="h-3.5 w-3.5" />
                 Export
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="dark:bg-card dark:border-border">
               <DropdownMenuItem onClick={handleExportPDF} className="cursor-pointer">
-                <FilePdf className="mr-2 h-4 w-4" />
+                <File className="mr-2 h-4 w-4" />
                 <span>Export as PDF</span>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={handleExportTXT} className="cursor-pointer">
@@ -191,8 +182,7 @@ const Reports = () => {
       
       <MetricsCards tasks={filteredTasks} formatTime={formatTime} />
       
-      {/* AI Insights Card */}
-      <Card className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-100">
+      <Card className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-100 dark:bg-card dark:border-border dark:from-transparent dark:to-transparent">
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium flex items-center">
             <Zap className="h-4 w-4 mr-2 text-purple-500" />
@@ -200,13 +190,12 @@ const Reports = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-700">{getInsights()}</p>
+          <p className="text-sm text-slate-700 dark:text-foreground/90">{getInsights()}</p>
         </CardContent>
       </Card>
       
-      {/* Performance Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <Card>
+        <Card className="dark:bg-card dark:border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center">
               <TrendingUp className="h-4 w-4 mr-2 text-green-500" />
@@ -214,8 +203,8 @@ const Reports = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{completionRate}%</div>
-            <div className="h-2 bg-gray-100 rounded-full mt-2">
+            <div className="text-2xl font-bold dark:text-foreground">{completionRate}%</div>
+            <div className="h-2 bg-gray-100 rounded-full mt-2 dark:bg-gray-800">
               <div 
                 className="h-2 bg-green-500 rounded-full" 
                 style={{ width: `${completionRate}%` }}
@@ -224,7 +213,7 @@ const Reports = () => {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="dark:bg-card dark:border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center">
               <BarChart4 className="h-4 w-4 mr-2 text-blue-500" />
@@ -232,11 +221,11 @@ const Reports = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatTime(avgTimePerTask)}</div>
+            <div className="text-2xl font-bold dark:text-foreground">{formatTime(avgTimePerTask)}</div>
           </CardContent>
         </Card>
         
-        <Card>
+        <Card className="dark:bg-card dark:border-border">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center">
               <Zap className="h-4 w-4 mr-2 text-amber-500" />
@@ -244,8 +233,8 @@ const Reports = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{highPriorityRate}%</div>
-            <div className="h-2 bg-gray-100 rounded-full mt-2">
+            <div className="text-2xl font-bold dark:text-foreground">{highPriorityRate}%</div>
+            <div className="h-2 bg-gray-100 rounded-full mt-2 dark:bg-gray-800">
               <div 
                 className="h-2 bg-amber-500 rounded-full" 
                 style={{ width: `${highPriorityRate}%` }}
