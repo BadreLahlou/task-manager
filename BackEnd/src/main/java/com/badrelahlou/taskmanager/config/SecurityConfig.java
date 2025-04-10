@@ -21,10 +21,8 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-                .requestMatchers("/api/users/**").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/api/tasks/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROJECT_MANAGER", "ROLE_TEAM_LEADER", "ROLE_TEAM_MEMBER")
-                .requestMatchers("/api/reports/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_PROJECT_MANAGER", "ROLE_TEAM_LEADER", "ROLE_EXTERNAL_VIEWER")
+                // Allow all requests to API endpoints for development
+                .requestMatchers("/api/**").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 

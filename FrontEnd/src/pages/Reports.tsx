@@ -25,14 +25,19 @@ const Reports = () => {
   const [timeFrame, setTimeFrame] = useState('all');
   
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
+    const fetchTasks = async () => {
       try {
-        setTasks(JSON.parse(savedTasks));
-      } catch (e) {
-        console.error('Failed to parse saved tasks:', e);
+        // Import loadTasks dynamically to avoid circular dependencies
+        const { loadTasks } = await import('@/utils/taskUtils');
+        const fetchedTasks = await loadTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+        toast.error('Failed to load tasks');
       }
-    }
+    };
+    
+    fetchTasks();
   }, []);
 
   const getFilteredTasks = () => {

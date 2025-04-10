@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { TaskProps } from '@/types/task';
-import { generateUUID } from '@/utils/taskUtils';
+import { createTask } from '@/utils/taskUtils';
 
 interface TaskCreateDialogProps {
   open: boolean;
@@ -36,25 +36,37 @@ export const TaskCreateDialog = ({
     }
   }, [open]);
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     if (!newTaskTitle.trim()) {
       toast.error("Task title is required");
       return;
     }
 
-    const newTask: TaskProps = {
-      id: generateUUID(),
-      title: newTaskTitle,
-      description: newTaskDescription || undefined,
-      priority: newTaskPriority,
-      status: 'todo',
-      dueDate: newTaskDueDate || undefined,
-      timeLogged: 0
-    };
+    try {
+      const taskData: Omit<TaskProps, 'id'> = {
+        title: newTaskTitle,
+        description: newTaskDescription || undefined,
+        priority: newTaskPriority,
+        status: 'todo',
+        dueDate: newTaskDueDate || undefined,
+        timeLogged: 0
+      };
 
-    onTaskCreate(newTask);
-    toast.success("Task created successfully");
-    onOpenChange(false); // Close dialog after task creation
+      // First close the dialog to improve UI responsiveness
+      onOpenChange(false);
+      
+      const createdTask = await createTask(taskData);
+      
+      if (createdTask) {
+        onTaskCreate(createdTask);
+        toast.success("Task created successfully");
+      } else {
+        toast.error("Failed to create task");
+      }
+    } catch (error) {
+      console.error('Error creating task:', error);
+      toast.error("Failed to create task");
+    }
   };
 
   const handleCancel = () => {

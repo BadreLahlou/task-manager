@@ -20,15 +20,23 @@ const TasksPage = () => {
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
 
-  // Load tasks from localStorage on initial render
+  // Load tasks from API on initial render
   useEffect(() => {
-    setTasks(loadTasks());
+    const fetchTasks = async () => {
+      try {
+        const fetchedTasks = await loadTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+        toast.error('Failed to load tasks');
+      }
+    };
+    
+    fetchTasks();
   }, []);
 
-  // Save tasks to localStorage whenever they change
-  useEffect(() => {
-    saveTasks(tasks);
-  }, [tasks]);
+  // We don't need to save tasks on every change anymore
+  // as each task operation (create, update, delete) is handled by the API
   
   // Apply filters to get the tasks that should be displayed
   const filteredTasks = filterTasks(tasks, activeFilter, priorityFilter, searchQuery);
@@ -48,25 +56,76 @@ const TasksPage = () => {
     setShowNewTaskDialog(isOpen);
   };
 
-  const handleStatusChange = (id: string, newStatus: TaskStatus) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === id ? { ...task, status: newStatus } : task
-      )
-    );
+  const handleStatusChange = async (id: string, newStatus: TaskStatus) => {
+    try {
+      // Find the task to update
+      const taskToUpdate = tasks.find(task => task.id === id);
+      if (!taskToUpdate) return;
+      
+      // Create updated task with new status
+      const updatedTaskData = { ...taskToUpdate, status: newStatus };
+      
+      // Update local state immediately for responsive UI
+      setTasks(prev => 
+        prev.map(task => 
+          task.id === id ? updatedTaskData : task
+        )
+      );
+      
+      // Update in the backend
+      const { updateTask } = await import('@/utils/taskUtils');
+      await updateTask(id, updatedTaskData);
+    } catch (error) {
+      console.error('Error updating task status:', error);
+      toast.error('Failed to update task status');
+    }
   };
 
-  const handleDeleteTask = (id: string) => {
-    setTasks(prev => prev.filter(task => task.id !== id));
-    toast.success("Task deleted successfully");
+  const handleDeleteTask = async (id: string) => {
+    try {
+      // Update local state immediately for responsive UI
+      setTasks(prev => prev.filter(task => task.id !== id));
+      
+      // Delete from the backend
+      const { deleteTask } = await import('@/utils/taskUtils');
+      const success = await deleteTask(id);
+      
+      if (success) {
+        toast.success("Task deleted successfully");
+      } else {
+        // If backend deletion fails, revert the local state change
+        const { loadTasks } = await import('@/utils/taskUtils');
+        const refreshedTasks = await loadTasks();
+        setTasks(refreshedTasks);
+        toast.error("Failed to delete task");
+      }
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      toast.error('Failed to delete task');
+    }
   };
 
-  const handleTimeUpdate = (id: string, newTime: number) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === id ? { ...task, timeLogged: newTime } : task
-      )
-    );
+  const handleTimeUpdate = async (id: string, newTime: number) => {
+    try {
+      // Find the task to update
+      const taskToUpdate = tasks.find(task => task.id === id);
+      if (!taskToUpdate) return;
+      
+      // Create updated task with new time
+      const updatedTaskData = { ...taskToUpdate, timeLogged: newTime };
+      
+      // Update local state immediately for responsive UI
+      setTasks(prev => 
+        prev.map(task => 
+          task.id === id ? updatedTaskData : task
+        )
+      );
+      
+      // We don't update the backend on every time update as that would create too many requests
+      // The backend will be updated when the timer is stopped or started
+    } catch (error) {
+      console.error('Error updating task time:', error);
+    }
   };
 
   const hasFilters = !!priorityFilter || !!searchQuery;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 import { 
   ArrowUpRight, 
   ClipboardList, 
@@ -22,14 +23,19 @@ const Dashboard = () => {
   const [todayDate, setTodayDate] = useState('');
   
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
+    const fetchTasks = async () => {
       try {
-        setTasks(JSON.parse(savedTasks));
-      } catch (e) {
-        console.error('Failed to parse saved tasks:', e);
+        // Import loadTasks dynamically to avoid circular dependencies
+        const { loadTasks } = await import('@/utils/taskUtils');
+        const fetchedTasks = await loadTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+        toast.error('Failed to load tasks');
       }
-    }
+    };
+    
+    fetchTasks();
     
     const today = new Date();
     const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };

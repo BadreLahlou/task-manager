@@ -6,26 +6,37 @@ import { TaskProps } from '@/types/task';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { TimerButton } from '@/components/TimerButton';
 import { toast } from 'sonner';
+import { taskApi } from '@/utils/api';
 
 const TimeTracking = () => {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
   const [timeFilter, setTimeFilter] = useState('all');
   const [activeTask, setActiveTask] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
+  // Fetch tasks from API on component mount
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
+    const fetchTasks = async () => {
+      setIsLoading(true);
       try {
-        setTasks(JSON.parse(savedTasks));
-      } catch (e) {
-        console.error('Failed to parse saved tasks:', e);
+        const fetchedTasks = await taskApi.getAllTasks();
+        setTasks(fetchedTasks);
+        
+        // Check if any task is currently in progress and set it as active
+        const inProgressTask = fetchedTasks.find(task => task.status === 'in-progress');
+        if (inProgressTask) {
+          setActiveTask(inProgressTask.id);
+        }
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+        toast.error('Failed to load tasks');
+      } finally {
+        setIsLoading(false);
       }
-    }
+    };
+    
+    fetchTasks();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
   
   const formatTime = (seconds?: number) => {
     if (!seconds) return '0h 0m';
@@ -63,40 +74,82 @@ const TimeTracking = () => {
   const filteredTasks = getFilteredTasks();
 
   const handleTimeUpdate = (taskId: string, newTime: number) => {
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === taskId ? { ...task, timeLogged: newTime } : task
-      )
-    );
-  };
-
-  const handleStartTimer = (taskId: string) => {
-    if (activeTask && activeTask !== taskId) {
-      setTasks(prev => 
-        prev.map(task => 
-          task.id === activeTask ? { ...task, status: 'todo' } : task
-        )
-      );
-      toast.info("Previous timer paused");
-    }
+    // Find the task to update
+    const taskToUpdate = tasks.find(task => task.id === taskId);
+    if (!taskToUpdate) return;
     
-    setActiveTask(taskId);
+    // Create updated task with new time
+    const updatedTask = { ...taskToUpdate, timeLogged: newTime };
+    
+    // Update local state immediately for responsive UI
     setTasks(prev => 
       prev.map(task => 
-        task.id === taskId ? { ...task, status: 'in-progress' } : task
+        task.id === taskId ? updatedTask : task
       )
     );
-    toast.success("Timer started");
+    
+    // We don't update the backend on every time update as that would create too many requests
+    // The backend will be updated when the timer is stopped
   };
 
-  const handlePauseTimer = (taskId: string) => {
-    setActiveTask(null);
-    setTasks(prev => 
-      prev.map(task => 
-        task.id === taskId ? { ...task, status: 'todo' } : task
-      )
-    );
-    toast.info("Timer paused");
+  const handleStartTimer = async (taskId: string) => {
+    try {
+      // If there's already an active task that's different from the one we're starting
+      if (activeTask && activeTask !== taskId) {
+        // Stop the previous timer in the backend
+        await taskApi.stopTimer(activeTask);
+        
+        // Update local state
+        setTasks(prev => 
+          prev.map(task => 
+            task.id === activeTask ? { ...task, status: 'todo' } : task
+          )
+        );
+        toast.info("Previous timer paused");
+      }
+      
+      // Start the new timer in the backend
+      const updatedTask = await taskApi.startTimer(taskId);
+      
+      if (updatedTask) {
+        // Update local state with the response from the backend
+        setTasks(prev => 
+          prev.map(task => 
+            task.id === taskId ? updatedTask : task
+          )
+        );
+        setActiveTask(taskId);
+        toast.success("Timer started");
+      } else {
+        toast.error("Failed to start timer");
+      }
+    } catch (error) {
+      console.error('Error starting timer:', error);
+      toast.error("Failed to start timer");
+    }
+  };
+
+  const handlePauseTimer = async (taskId: string) => {
+    try {
+      // Stop the timer in the backend
+      const updatedTask = await taskApi.stopTimer(taskId);
+      
+      if (updatedTask) {
+        // Update local state with the response from the backend
+        setTasks(prev => 
+          prev.map(task => 
+            task.id === taskId ? updatedTask : task
+          )
+        );
+        setActiveTask(null);
+        toast.info("Timer stopped");
+      } else {
+        toast.error("Failed to stop timer");
+      }
+    } catch (error) {
+      console.error('Error stopping timer:', error);
+      toast.error("Failed to stop timer");
+    }
   };
 
   return (
@@ -163,7 +216,15 @@ const TimeTracking = () => {
         <div className="p-5 border-b">
           <h2 className="font-semibold">Time Logs</h2>
         </div>
-        {filteredTasks.length > 0 ? (
+        {isLoading ? (
+          <div className="p-8 text-center rounded-b-xl">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="h-12 w-12 bg-muted rounded-full mb-4"></div>
+              <div className="h-4 w-32 bg-muted rounded mb-2"></div>
+              <div className="h-3 w-48 bg-muted rounded"></div>
+            </div>
+          </div>
+        ) : filteredTasks.length > 0 ? (
           <div className="divide-y dark:divide-border">
             {filteredTasks.map(task => (
               <div key={task.id} className="p-5 flex justify-between items-center">

@@ -9,13 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isSameMonth } from 'date-fns';
+import { createTask, loadTasks } from '@/utils/taskUtils';
 
-const generateUUID = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-};
+// UUID generation is now handled by the backend
 
 const Calendar = () => {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
@@ -29,14 +25,17 @@ const Calendar = () => {
   const [newTaskPriority, setNewTaskPriority] = useState<'low' | 'medium' | 'high'>('medium');
   
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    if (savedTasks) {
+    const fetchTasks = async () => {
       try {
-        setTasks(JSON.parse(savedTasks));
-      } catch (e) {
-        console.error('Failed to parse saved tasks:', e);
+        const fetchedTasks = await loadTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error('Failed to fetch tasks:', error);
+        toast.error('Failed to load tasks');
       }
-    }
+    };
+    
+    fetchTasks();
   }, []);
   
   useEffect(() => {
@@ -86,14 +85,13 @@ const Calendar = () => {
     resetNewTaskForm();
   };
 
-  const handleCreateTask = () => {
+  const handleCreateTask = async () => {
     if (!newTaskTitle.trim()) {
       toast.error("Task title is required");
       return;
     }
 
-    const newTask: TaskProps = {
-      id: generateUUID(),
+    const taskData: Omit<TaskProps, 'id'> = {
       title: newTaskTitle,
       description: newTaskDescription || undefined,
       priority: newTaskPriority,
@@ -102,15 +100,23 @@ const Calendar = () => {
       timeLogged: 0
     };
 
-    setTasks(prev => {
-      const updatedTasks = [...prev, newTask];
-      localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-      return updatedTasks;
-    });
-    
-    resetNewTaskForm();
-    setShowAddTaskDialog(false);
-    toast.success("Task created successfully");
+    try {
+      // First close the dialog to improve UI responsiveness
+      resetNewTaskForm();
+      setShowAddTaskDialog(false);
+      
+      const createdTask = await createTask(taskData);
+      
+      if (createdTask) {
+        setTasks(prev => [...prev, createdTask]);
+        toast.success("Task created successfully");
+      } else {
+        toast.error("Failed to create task");
+      }
+    } catch (error) {
+      console.error('Error creating task:', error);
+      toast.error("Failed to create task");
+    }
   };
 
   const resetNewTaskForm = () => {
@@ -294,12 +300,15 @@ const Calendar = () => {
         </div>
       )}
       
-      <Dialog open={showAddTaskDialog} onOpenChange={(open) => {
-        console.log("Calendar dialog state changing to:", open);
-        if (!open) {
-          closeTaskDialog();
-        }
-      }}>
+      <Dialog 
+        open={showAddTaskDialog} 
+        onOpenChange={(open) => {
+          console.log("Calendar dialog state changing to:", open);
+          if (!open) {
+            closeTaskDialog();
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Create New Task</DialogTitle>
