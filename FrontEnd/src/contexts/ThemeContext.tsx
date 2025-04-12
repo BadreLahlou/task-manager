@@ -19,13 +19,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
-    // Check localStorage first
+   
     const savedTheme = localStorage.getItem('theme') as Theme;
     if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
       return savedTheme;
     }
     
-    // Default to system
+    
     return 'system';
   });
 
@@ -34,17 +34,17 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     return savedCompactMode === 'true';
   });
 
-  // Apply theme class to document
+  
   useEffect(() => {
     const root = window.document.documentElement;
     
-    // Remove old class
+    
     root.classList.remove('light', 'dark');
 
-    // Save to localStorage
+   
     localStorage.setItem('theme', theme);
 
-    // Apply theme
+    
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       root.classList.add(systemTheme);
@@ -53,7 +53,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
   }, [theme]);
 
-  // Apply compact mode class
+  
   useEffect(() => {
     const root = window.document.documentElement;
     
@@ -66,7 +66,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     localStorage.setItem('compactMode', String(compactMode));
   }, [compactMode]);
 
-  // Listen for system preference changes
+  
   useEffect(() => {
     if (theme !== 'system') return;
     
