@@ -8,7 +8,7 @@ export const formatTime = (seconds?: number) => {
   return `${hours}h ${minutes}m`;
 };
 
-// Enhanced vibrant color palette for charts
+
 export const chartColors = {
   status: {
     todo: '#FCD34D',       // Bright yellow
@@ -48,7 +48,7 @@ export const chartColors = {
   }
 };
 
-// Get a random color from our vibrant palette
+
 export const getRandomColor = () => {
   const colors = [
     '#8B5CF6', // Purple
@@ -79,7 +79,7 @@ export const getPastelColor = (baseColor: string) => {
   return pastelPairs[baseColor] || '#F9FAFB'; // Default to light gray if not found
 };
 
-// Get a random gradient for backgrounds
+
 export const getRandomGradient = () => {
   const gradients = [
     'linear-gradient(to right, #8B5CF6, #3B82F6)',   // Purple to Blue
@@ -92,7 +92,7 @@ export const getRandomGradient = () => {
   return gradients[Math.floor(Math.random() * gradients.length)];
 };
 
-// Convert hex color to RGBA with opacity
+
 export const hexToRgba = (hex: string, opacity: number = 1) => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
