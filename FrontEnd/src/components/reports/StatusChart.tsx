@@ -15,23 +15,23 @@ const StatusChart = ({ tasks }: StatusChartProps) => {
   const inProgressTasks = tasks.filter(task => task.status === 'in-progress');
   const completedTasks = tasks.filter(task => task.status === 'completed');
   
-  // Enhanced color scheme for status chart
+  
   const statusData = [
     { name: 'To Do', value: todoTasks.length, color: '#FCD34D' },
     { name: 'In Progress', value: inProgressTasks.length, color: '#A78BFA' },
     { name: 'Completed', value: completedTasks.length, color: '#4ADE80' }
   ];
 
-  // Filter out zero-value segments to avoid clutter
+  
   const filteredData = statusData.filter(item => item.value > 0);
   
-  // Custom label function to prevent overlapping
+  
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
-    // Don't show labels for small segments
+    
     if (percent < 0.1) return null;
     
     const RADIAN = Math.PI / 180;
-    // Calculate position to avoid overlapping
+    
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN) * 1.2;
     const y = cy + radius * Math.sin(-midAngle * RADIAN) * 1.2;
