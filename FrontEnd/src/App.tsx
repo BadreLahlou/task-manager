@@ -17,7 +17,7 @@ import Login from "./pages/Login";
 import TasksPage from "./pages/TasksPage";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
-// Create a new QueryClient instance
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
