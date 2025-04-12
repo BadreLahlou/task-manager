@@ -21,7 +21,7 @@ const TimeChart = ({ tasks }: TimeChartProps) => {
     { name: 'Completed', time: completedTasks.reduce((t, task) => t + (task.timeLogged || 0), 0) / 3600, color: '#4ADE80' }
   ];
 
-  // Filter out zero-value bars to avoid clutter
+  
   const filteredData = timeData.filter(item => item.time > 0);
   
   const formatYAxisTick = (value: number) => {
