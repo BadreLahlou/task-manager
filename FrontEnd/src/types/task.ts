@@ -6,7 +6,7 @@ export interface TaskProps {
   priority: 'low' | 'medium' | 'high';
   status: 'todo' | 'in-progress' | 'completed';
   dueDate?: string;
-  timeLogged?: number; // in seconds
+  timeLogged?: number; 
 }
 
 export type TaskStatus = 'todo' | 'in-progress' | 'completed';
