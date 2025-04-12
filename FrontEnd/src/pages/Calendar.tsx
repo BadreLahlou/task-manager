@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isSameMonth } from 'date-fns';
 import { createTask, loadTasks } from '@/utils/taskUtils';
 
-// UUID generation is now handled by the backend
+
 
 const Calendar = () => {
   const [tasks, setTasks] = useState<TaskProps[]>([]);
@@ -101,7 +101,7 @@ const Calendar = () => {
     };
 
     try {
-      // First close the dialog to improve UI responsiveness
+      
       resetNewTaskForm();
       setShowAddTaskDialog(false);
       
