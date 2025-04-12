@@ -14,7 +14,7 @@ const TimeTracking = () => {
   const [activeTask, setActiveTask] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Fetch tasks from API on component mount
+  
   useEffect(() => {
     const fetchTasks = async () => {
       setIsLoading(true);
@@ -22,7 +22,7 @@ const TimeTracking = () => {
         const fetchedTasks = await taskApi.getAllTasks();
         setTasks(fetchedTasks);
         
-        // Check if any task is currently in progress and set it as active
+        
         const inProgressTask = fetchedTasks.find(task => task.status === 'in-progress');
         if (inProgressTask) {
           setActiveTask(inProgressTask.id);
@@ -74,32 +74,31 @@ const TimeTracking = () => {
   const filteredTasks = getFilteredTasks();
 
   const handleTimeUpdate = (taskId: string, newTime: number) => {
-    // Find the task to update
+    
     const taskToUpdate = tasks.find(task => task.id === taskId);
     if (!taskToUpdate) return;
     
-    // Create updated task with new time
+   
     const updatedTask = { ...taskToUpdate, timeLogged: newTime };
     
-    // Update local state immediately for responsive UI
+    
     setTasks(prev => 
       prev.map(task => 
         task.id === taskId ? updatedTask : task
       )
     );
     
-    // We don't update the backend on every time update as that would create too many requests
-    // The backend will be updated when the timer is stopped
+    
   };
 
   const handleStartTimer = async (taskId: string) => {
     try {
-      // If there's already an active task that's different from the one we're starting
+      
       if (activeTask && activeTask !== taskId) {
-        // Stop the previous timer in the backend
+        
         await taskApi.stopTimer(activeTask);
         
-        // Update local state
+        
         setTasks(prev => 
           prev.map(task => 
             task.id === activeTask ? { ...task, status: 'todo' } : task
@@ -108,11 +107,11 @@ const TimeTracking = () => {
         toast.info("Previous timer paused");
       }
       
-      // Start the new timer in the backend
+      
       const updatedTask = await taskApi.startTimer(taskId);
       
       if (updatedTask) {
-        // Update local state with the response from the backend
+       
         setTasks(prev => 
           prev.map(task => 
             task.id === taskId ? updatedTask : task
@@ -131,11 +130,11 @@ const TimeTracking = () => {
 
   const handlePauseTimer = async (taskId: string) => {
     try {
-      // Stop the timer in the backend
+      
       const updatedTask = await taskApi.stopTimer(taskId);
       
       if (updatedTask) {
-        // Update local state with the response from the backend
+        
         setTasks(prev => 
           prev.map(task => 
             task.id === taskId ? updatedTask : task
