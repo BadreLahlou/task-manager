@@ -18,7 +18,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Store original body overflow style
+  
   const [originalBodyOverflow, setOriginalBodyOverflow] = useState('');
 
   useEffect(() => {
@@ -31,12 +31,12 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+ 
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
   
-  // Handle body overflow to prevent scrolling when mobile menu is open
+  
   useEffect(() => {
     if (isMobileMenuOpen) {
       setOriginalBodyOverflow(document.body.style.overflow);
