@@ -20,7 +20,7 @@ const TasksPage = () => {
   const [openFilterDrawer, setOpenFilterDrawer] = useState(false);
   const [priorityFilter, setPriorityFilter] = useState<string | null>(null);
 
-  // Load tasks from API on initial render
+  
   useEffect(() => {
     const fetchTasks = async () => {
       try {
@@ -58,21 +58,21 @@ const TasksPage = () => {
 
   const handleStatusChange = async (id: string, newStatus: TaskStatus) => {
     try {
-      // Find the task to update
+      
       const taskToUpdate = tasks.find(task => task.id === id);
       if (!taskToUpdate) return;
       
-      // Create updated task with new status
+      
       const updatedTaskData = { ...taskToUpdate, status: newStatus };
       
-      // Update local state immediately for responsive UI
+      
       setTasks(prev => 
         prev.map(task => 
           task.id === id ? updatedTaskData : task
         )
       );
       
-      // Update in the backend
+      
       const { updateTask } = await import('@/utils/taskUtils');
       await updateTask(id, updatedTaskData);
     } catch (error) {
@@ -83,17 +83,17 @@ const TasksPage = () => {
 
   const handleDeleteTask = async (id: string) => {
     try {
-      // Update local state immediately for responsive UI
+      
       setTasks(prev => prev.filter(task => task.id !== id));
       
-      // Delete from the backend
+     
       const { deleteTask } = await import('@/utils/taskUtils');
       const success = await deleteTask(id);
       
       if (success) {
         toast.success("Task deleted successfully");
       } else {
-        // If backend deletion fails, revert the local state change
+       
         const { loadTasks } = await import('@/utils/taskUtils');
         const refreshedTasks = await loadTasks();
         setTasks(refreshedTasks);
@@ -107,22 +107,21 @@ const TasksPage = () => {
 
   const handleTimeUpdate = async (id: string, newTime: number) => {
     try {
-      // Find the task to update
+     
       const taskToUpdate = tasks.find(task => task.id === id);
       if (!taskToUpdate) return;
       
-      // Create updated task with new time
+      
       const updatedTaskData = { ...taskToUpdate, timeLogged: newTime };
       
-      // Update local state immediately for responsive UI
+      
       setTasks(prev => 
         prev.map(task => 
           task.id === id ? updatedTaskData : task
         )
       );
       
-      // We don't update the backend on every time update as that would create too many requests
-      // The backend will be updated when the timer is stopped or started
+      
     } catch (error) {
       console.error('Error updating task time:', error);
     }
