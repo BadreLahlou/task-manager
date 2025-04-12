@@ -1,13 +1,10 @@
-/**
- * API service for communicating with the backend
- */
 
 import { TaskProps, TaskStatus, TaskPriority } from '@/types/task';
 
-// Base URL for API requests
+
 const API_BASE_URL = 'http://localhost:8080/api';
 
-// Helper function to convert backend task status to frontend task status
+
 const mapBackendStatusToFrontend = (status: string): TaskStatus => {
   switch (status) {
     case 'TODO':
@@ -21,7 +18,7 @@ const mapBackendStatusToFrontend = (status: string): TaskStatus => {
   }
 };
 
-// Helper function to convert frontend task status to backend task status
+
 const mapFrontendStatusToBackend = (status: TaskStatus): string => {
   switch (status) {
     case 'todo':
@@ -49,7 +46,6 @@ const mapBackendPriorityToFrontend = (priority: string): TaskPriority => {
   }
 };
 
-// Helper function to convert frontend priority to backend priority
 const mapFrontendPriorityToBackend = (priority: TaskPriority): string => {
   switch (priority) {
     case 'low':
@@ -63,9 +59,9 @@ const mapFrontendPriorityToBackend = (priority: TaskPriority): string => {
   }
 };
 
-// Convert backend task to frontend task format
+
 const convertBackendTaskToFrontend = (backendTask: any): TaskProps => {
-  // Format the date in a more readable format
+
   let formattedDueDate;
   if (backendTask.endTime) {
     const dueDate = new Date(backendTask.endTime);
@@ -79,11 +75,11 @@ const convertBackendTaskToFrontend = (backendTask: any): TaskProps => {
     priority: mapBackendPriorityToFrontend(backendTask.priority),
     status: mapBackendStatusToFrontend(backendTask.status),
     dueDate: formattedDueDate,
-    timeLogged: backendTask.timeSpent ? backendTask.timeSpent * 60 : 0, // Convert minutes to seconds
+    timeLogged: backendTask.timeSpent ? backendTask.timeSpent * 60 : 0, 
   };
 };
 
-// Convert frontend task to backend task format
+
 const convertFrontendTaskToBackend = (frontendTask: TaskProps): any => {
   return {
     id: parseInt(frontendTask.id) || null,
@@ -92,13 +88,13 @@ const convertFrontendTaskToBackend = (frontendTask: TaskProps): any => {
     priority: mapFrontendPriorityToBackend(frontendTask.priority),
     status: mapFrontendStatusToBackend(frontendTask.status),
     endTime: frontendTask.dueDate ? new Date(frontendTask.dueDate).toISOString() : null,
-    timeSpent: frontendTask.timeLogged ? Math.floor(frontendTask.timeLogged / 60) : 0, // Convert seconds to minutes
+    timeSpent: frontendTask.timeLogged ? Math.floor(frontendTask.timeLogged / 60) : 0, 
   };
 };
 
-// API functions
+
 export const taskApi = {
-  // Get all tasks
+ 
   getAllTasks: async (): Promise<TaskProps[]> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks`);
@@ -109,13 +105,13 @@ export const taskApi = {
       return data.content.map(convertBackendTaskToFrontend);
     } catch (error) {
       console.error('Error fetching tasks:', error);
-      // Fallback to localStorage if API fails
+     
       const savedTasks = localStorage.getItem('tasks');
       return savedTasks ? JSON.parse(savedTasks) : [];
     }
   },
 
-  // Get task by ID
+  
   getTaskById: async (id: string): Promise<TaskProps | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${id}`);
@@ -130,25 +126,25 @@ export const taskApi = {
     }
   },
 
-  // Create a new task
+  
   createTask: async (task: Omit<TaskProps, 'id'>): Promise<TaskProps | null> => {
     try {
       const taskToCreate = {
         ...task,
-        id: '0', // Temporary ID that will be replaced by the backend
+        id: '0', 
       };
       
-      // Convert to backend format
+     
       const backendTask = convertFrontendTaskToBackend(taskToCreate as TaskProps);
       
-      // Ensure required fields are set
+     
       if (!backendTask.startTime) {
         backendTask.startTime = new Date().toISOString();
       }
       if (!backendTask.endTime && task.dueDate) {
         backendTask.endTime = new Date(task.dueDate).toISOString();
       } else if (!backendTask.endTime) {
-        // Set default end time to 1 day from now if not provided
+       
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         backendTask.endTime = tomorrow.toISOString();
@@ -161,7 +157,7 @@ export const taskApi = {
         },
         body: JSON.stringify({
           task: backendTask,
-          dependencyIds: [] // No dependencies for now
+          dependencyIds: []
         }),
       });
       
@@ -177,7 +173,7 @@ export const taskApi = {
     }
   },
 
-  // Update a task
+ 
   updateTask: async (id: string, task: TaskProps): Promise<TaskProps | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
@@ -200,7 +196,7 @@ export const taskApi = {
     }
   },
 
-  // Delete a task
+  
   deleteTask: async (id: string): Promise<boolean> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
@@ -214,7 +210,7 @@ export const taskApi = {
     }
   },
 
-  // Start timer for a task
+  
   startTimer: async (id: string): Promise<TaskProps | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${id}/start`, {
@@ -233,7 +229,7 @@ export const taskApi = {
     }
   },
 
-  // Stop timer for a task
+ 
   stopTimer: async (id: string): Promise<TaskProps | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${id}/stop`, {
@@ -252,7 +248,7 @@ export const taskApi = {
     }
   },
 
-  // Assign task to user
+  
   assignTaskToUser: async (taskId: string, userId: string): Promise<TaskProps | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/assign`, {
