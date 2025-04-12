@@ -18,7 +18,7 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate authentication
+   
     setTimeout(() => {
       setIsLoading(false);
       toast.success('Logged in successfully!');
@@ -29,7 +29,7 @@ const Login = () => {
   const handleProviderLogin = (provider: string) => {
     setIsLoading(true);
     
-    // Simulate authentication with provider
+  
     setTimeout(() => {
       setIsLoading(false);
       toast.success(`Logged in with ${provider}!`);
