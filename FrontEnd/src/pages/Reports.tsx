@@ -27,7 +27,7 @@ const Reports = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        // Import loadTasks dynamically to avoid circular dependencies
+        
         const { loadTasks } = await import('@/utils/taskUtils');
         const fetchedTasks = await loadTasks();
         setTasks(fetchedTasks);
