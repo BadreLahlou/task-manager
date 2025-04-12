@@ -15,7 +15,7 @@ const NotFound = () => {
       location.pathname
     );
     
-    // Show toast notification
+   
     toast.error(`Page not found: ${location.pathname}`, {
       description: "The page you're looking for doesn't exist or was moved.",
       duration: 4000,
