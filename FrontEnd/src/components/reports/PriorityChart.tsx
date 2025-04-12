@@ -11,23 +11,23 @@ const PriorityChart = ({ tasks }: PriorityChartProps) => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   
-  // Vibrant colors for priority chart
+  
   const priorityData = [
     { name: 'Low', value: tasks.filter(t => t.priority === 'low').length, color: '#93C5FD' },
     { name: 'Medium', value: tasks.filter(t => t.priority === 'medium').length, color: '#FCD34D' },
     { name: 'High', value: tasks.filter(t => t.priority === 'high').length, color: '#F87171' }
   ];
 
-  // Filter out zero-value segments to avoid clutter
+  
   const filteredData = priorityData.filter(item => item.value > 0);
   
-  // Custom label function to prevent overlapping
+  
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
-    // Don't show labels for small segments
+    
     if (percent < 0.1) return null;
     
     const RADIAN = Math.PI / 180;
-    // Calculate position to avoid overlapping
+    
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN) * 1.2;
     const y = cy + radius * Math.sin(-midAngle * RADIAN) * 1.2;
